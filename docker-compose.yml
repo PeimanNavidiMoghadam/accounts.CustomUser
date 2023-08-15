@@ -1,0 +1,26 @@
+# نسخه‌ی مورد استفاده از فرمت فایل docker-compose
+version: '2.20.2'
+
+# تعریف سرویس‌های مختلف برنامه
+services:
+
+  # سرویس مربوط به برنامه وب Django
+  web:
+    # ایجاد تصویر Docker با استفاده از فایل Dockerfile در دایرکتوری فعلی
+    build: .
+    # دستور اجرا برای راه‌اندازی برنامه وب
+    command: python /code/manage.py runserver 0.0.0.0:8000
+    # اتصال مسیر فعلی به مسیر /code داخل کانتینر
+    volumes:
+      - .:/code
+    # اتصال پورت 8000 کانتینر به پورت 8000 میزبان
+    ports:
+      - 8000:8000
+
+  # سرویس مربوط به پایگاه داده PostgreSQL
+  db:
+    # استفاده از تصویر Docker postgres:15 برای ایجاد کانتینر پایگاه داده
+    image: postgres:15
+    # تنظیمات محیطی برای کانتینر پایگاه داده
+    environment:
+      - "POSTGRES_HOST_AUTH_METHOD=trust"
